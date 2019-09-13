@@ -1,9 +1,4 @@
-
-
-
-
-
-
+import re
 
 # Se abre el archivo con lectura y escritura
 # rw indica lectura (read)
@@ -34,19 +29,69 @@ while i < len(lista):
 
 # Metodo dos de reemplazar QR con I
 
-lista = "RRQRR"
+lista = "RRQRQ"
 respuesta = []
 
 for i in range(0,len(lista)):
-    if lista[i] == "Q" and lista[i+1] == "R":
+    if lista[i] == "Q" and i+1 < len(lista) and lista[i+1] == "R":
         x = "T"
-    elif lista[i] === "R" and lista[i-1] == "Q":
+    elif i > 0 and lista[i] == "R" and lista[i-1] == "Q":
         x = ""
     else:
         x = lista[i]
 
-    respuesta.append(i)
+    respuesta.append(x)
+
+reemplazar("QR", "I", lista) # Produce: RRIQ
 
 #Metodo 3 de reemplazar QR con I
 
 lista.replace("QR", "I")
+
+def reemplazar(palabra, reemplazo, lista):
+    return lista.replace(palabra, reemplazo)
+
+
+# Se abre el archivo con lectura y escritura
+# rw indica lectura (read)
+file = open("file.txt", "r")
+
+def leerReemplazo(actual):
+    #leer el reemplazo
+    #obtener el resto
+
+    res = re.match(
+        '(?P<patron>[A-Z]{3})\s(?P<resto>.*)',
+        actual)
+
+    return (
+        res.group('patron'),
+        res.group('resto'))
+
+def splitLine(linea):
+    res = re.match(
+        "((?P<cantidad>\d+)\s+(?P<patrones>([A-Z]{3}\s+)+))?(?P<resto>.+)",
+        linea)
+
+    return (
+        res.group('cantidad'),
+        res.group('patrones'),
+        res.group('resto'))
+
+for line in file:
+
+    (numReemplazos, actual, resto) = splitLine(line)
+    reemplazos = []
+
+    for i in range(0, int(numReemplazos)):
+        (reemplazo, actual) = leerReemplazo(actual)
+        reemplazos.append(reemplazo)
+
+    for rep in reemplazos:
+        combinacion = rep[0:2]
+        res = rep[2]
+        resto = reemplazar(combinacion, res, resto)
+
+    print('linea original:' + line)
+    print('resultado:' + resto)
+
