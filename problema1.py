@@ -78,6 +78,33 @@ def splitLine(linea):
         res.group('patrones'),
         res.group('resto'))
 
+def separar(palabra):
+    x = []
+    for letras in palabra:
+        x.append(letras)
+    return x
+
+# Función para eleminar elementos de un string
+def eliminar(palabra, combinacion):
+    palabra = separar(palabra)
+    y = separar(combinacion)
+
+    in1 = y[0]
+    in2 = y[1]
+
+    x = []
+    c = ""
+
+    for i in range(0, len(palabra)):
+        if palabra[i] >= in1 and palabra[i] <= in2:
+            x.append(c)
+        else:
+            x.append(palabra[i])
+
+    return "".join(x)
+
+print(eliminar("123456789", "27"))
+
 for line in file:
 
     (numReemplazos, actual, resto) = splitLine(line)
